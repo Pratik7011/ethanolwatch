@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import SiteHeader from '../components/SiteHeader';
 import { supabase } from '../../lib/supabaseClient';
-
+ 
 const CATEGORIES = [
   { id: 'mileage_drop', label: 'Mileage drop' },
   { id: 'engine_knocking', label: 'Engine knocking / rough idle' },
@@ -13,35 +13,45 @@ const CATEGORIES = [
   { id: 'hard_start', label: 'Hard starting' },
   { id: 'other', label: 'Other' },
 ];
-
+ 
 const STATES = [
   'Maharashtra', 'Delhi', 'Karnataka', 'Tamil Nadu', 'Uttar Pradesh', 'Gujarat',
   'Rajasthan', 'West Bengal', 'Telangana', 'Kerala', 'Punjab', 'Madhya Pradesh',
   'Haryana', 'Bihar', 'Other',
 ];
-
+ 
 export default function ReportPage() {
   const [form, setForm] = useState({
     vehicle_make: '', vehicle_model: '', vehicle_year: '', vehicle_type: 'car',
-    fuel_type: 'petrol', city: '', state: 'Maharashtra', issue_category: '',
+    fuel_type: 'petrol', city: '', state: 'Maharashtra', issue_category: [],
     severity: 'moderate', onset: 'gradual', odometer_km: '', description: '',
   });
   const [status, setStatus] = useState(null); // null | 'submitting' | 'success' | 'error'
   const [errorMsg, setErrorMsg] = useState('');
-
+ 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
   }
-
+ 
+  function toggleCategory(id) {
+    setForm((f) => {
+      const has = f.issue_category.includes(id);
+      const next = has
+        ? f.issue_category.filter((c) => c !== id)
+        : [...f.issue_category, id];
+      return { ...f, issue_category: next };
+    });
+  }
+ 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!form.issue_category) {
+    if (!form.issue_category.length) {
       setStatus('error');
-      setErrorMsg('Pick the issue category that best matches what happened.');
+      setErrorMsg('Pick at least one issue category that matches what happened.');
       return;
     }
     setStatus('submitting');
-
+ 
     // Reports require a logged-in user (see schema RLS policy). Anonymous
     // sign-in keeps the "two minutes, no signup friction" promise while still
     // giving every report an owner for moderation purposes.
@@ -55,7 +65,7 @@ export default function ReportPage() {
       }
       user = data.user;
     }
-
+ 
     const { error } = await supabase.from('reports').insert({
       user_id: user.id,
       vehicle_make: form.vehicle_make,
@@ -65,13 +75,13 @@ export default function ReportPage() {
       fuel_type: form.fuel_type,
       city: form.city,
       state: form.state,
-      issue_category: form.issue_category,
+      issue_category: form.issue_category, // now a text[] array
       severity: form.severity,
       onset: form.onset,
       odometer_km: form.odometer_km ? parseInt(form.odometer_km) : null,
       description: form.description || null,
     });
-
+ 
     if (error) {
       setStatus('error');
       setErrorMsg(error.message);
@@ -79,7 +89,7 @@ export default function ReportPage() {
       setStatus('success');
     }
   }
-
+ 
   return (
     <>
       <SiteHeader />
@@ -92,7 +102,7 @@ export default function ReportPage() {
             needed — this takes about two minutes.
           </p>
         </div>
-
+ 
         <div className="form-card">
           {status === 'success' ? (
             <div className="form-msg success">
@@ -101,7 +111,7 @@ export default function ReportPage() {
           ) : (
             <form onSubmit={handleSubmit}>
               {status === 'error' && <div className="form-msg error">{errorMsg}</div>}
-
+ 
               <div className="form-grid">
                 <div className="form-row">
                   <label>Vehicle make</label>
@@ -112,7 +122,7 @@ export default function ReportPage() {
                   <input required value={form.vehicle_model} onChange={(e) => update('vehicle_model', e.target.value)} placeholder="e.g. Swift" />
                 </div>
               </div>
-
+ 
               <div className="form-grid">
                 <div className="form-row">
                   <label>Year</label>
@@ -128,7 +138,7 @@ export default function ReportPage() {
                   </select>
                 </div>
               </div>
-
+ 
               <div className="form-grid">
                 <div className="form-row">
                   <label>City</label>
@@ -141,22 +151,31 @@ export default function ReportPage() {
                   </select>
                 </div>
               </div>
-
+ 
               <div className="form-row">
-                <label>What issue are you seeing?</label>
+                <label>What issue are you seeing? <span className="hint" style={{ fontWeight: 400 }}>(select all that apply)</span></label>
                 <div className="chip-group">
-                  {CATEGORIES.map((c) => (
-                    <div
-                      key={c.id}
-                      className={`chip ${form.issue_category === c.id ? 'selected' : ''}`}
-                      onClick={() => update('issue_category', c.id)}
-                    >
-                      {c.label}
-                    </div>
-                  ))}
+                  {CATEGORIES.map((c) => {
+                    const checked = form.issue_category.includes(c.id);
+                    return (
+                      <label
+                        key={c.id}
+                        className={`chip ${checked ? 'selected' : ''}`}
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleCategory(c.id)}
+                          style={{ margin: 0 }}
+                        />
+                        {c.label}
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
-
+ 
               <div className="form-grid">
                 <div className="form-row">
                   <label>Severity</label>
@@ -174,18 +193,18 @@ export default function ReportPage() {
                   </select>
                 </div>
               </div>
-
+ 
               <div className="form-row">
                 <label>Odometer reading when it started (km)</label>
                 <input type="number" value={form.odometer_km} onChange={(e) => update('odometer_km', e.target.value)} placeholder="e.g. 41200" />
               </div>
-
+ 
               <div className="form-row">
                 <label>Anything else worth noting?</label>
                 <textarea value={form.description} onChange={(e) => update('description', e.target.value)} placeholder="Optional — describe what happened, what a mechanic said, etc." />
                 <div className="hint">Photo/video upload can be added once Supabase storage is wired up — see README.</div>
               </div>
-
+ 
               <button type="submit" className="btn btn-fill" style={{ width: '100%', justifyContent: 'center' }} disabled={status === 'submitting'}>
                 {status === 'submitting' ? 'Submitting…' : 'Submit report'}
               </button>
@@ -196,3 +215,4 @@ export default function ReportPage() {
     </>
   );
 }
+ 
