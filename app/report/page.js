@@ -158,19 +158,13 @@ export default function ReportPage() {
                   {CATEGORIES.map((c) => {
                     const checked = form.issue_category.includes(c.id);
                     return (
-                      <label
+                      <div
                         key={c.id}
                         className={`chip ${checked ? 'selected' : ''}`}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}
+                        onClick={() => toggleCategory(c.id)}
                       >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleCategory(c.id)}
-                          style={{ margin: 0 }}
-                        />
                         {c.label}
-                      </label>
+                      </div>
                     );
                   })}
                 </div>
