@@ -21,7 +21,7 @@ export default function LiveTicker({ initialReports, totalCount }) {
     const interval = setInterval(async () => {
       const { data } = await supabase
         .from('reports')
-        .select('id, vehicle_make, vehicle_model, city, state, issue_category')
+        .select('id, vehicle_make, vehicle_model, city, state, issue_categories')
         .eq('status', 'published')
         .order('created_at', { ascending: false })
         .limit(6);
@@ -33,10 +33,13 @@ export default function LiveTicker({ initialReports, totalCount }) {
   const text =
     reports.length > 0
       ? reports
-          .map(
-            (r) =>
-              `New report from ${r.city}, ${r.state} — ${CATEGORY_LABELS[r.issue_category] || 'an issue'}, ${r.vehicle_make} ${r.vehicle_model}`
-          )
+          .map((r) => {
+            const labels = (r.issue_categories || [])
+              .map((c) => CATEGORY_LABELS[c])
+              .filter(Boolean);
+            const issueText = labels.length ? labels.join(' + ') : 'an issue';
+            return `New report from ${r.city}, ${r.state} — ${issueText}, ${r.vehicle_make} ${r.vehicle_model}`;
+          })
           .join('  ·  ')
       : 'Be the first to submit a report — it takes about two minutes.';
 

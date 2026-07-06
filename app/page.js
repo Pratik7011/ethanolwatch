@@ -44,10 +44,36 @@ export default async function HomePage() {
               </p>
               <div className="hero-ctas">
                 <Link href="/report" className="btn btn-fill">Report your issue</Link>
-                <Link href="/guide" className="btn btn-line">View methodology</Link>
+                <Link href="/data" className="btn btn-line">Explore the data</Link>
               </div>
             </div>
             <IndiaMap stateCounts={stateCounts} totalCount={totalCount} />
+          </div>
+        </section>
+
+        <section className="block" style={{ paddingTop: 40, paddingBottom: 40 }}>
+          <div className="how-it-works-grid">
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 10 }}><span className="dotmark"></span>01</div>
+              <h3 style={{ fontSize: 16, marginBottom: 6 }}>Report your experience</h3>
+              <p style={{ fontSize: 13.5, color: 'var(--ink-soft)' }}>
+                Two minutes, structured fields — vehicle, city, what happened. No account needed.
+              </p>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 10 }}><span className="dotmark"></span>02</div>
+              <h3 style={{ fontSize: 16, marginBottom: 6 }}>It joins the public record</h3>
+              <p style={{ fontSize: 13.5, color: 'var(--ink-soft)' }}>
+                Every submission is anonymized and added to the live map and category data instantly.
+              </p>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 10 }}><span className="dotmark"></span>03</div>
+              <h3 style={{ fontSize: 16, marginBottom: 6 }}>Patterns become visible</h3>
+              <p style={{ fontSize: 13.5, color: 'var(--ink-soft)' }}>
+                As reports accumulate, real patterns — by vehicle, region, and issue type — emerge from the noise.
+              </p>
+            </div>
           </div>
         </section>
 

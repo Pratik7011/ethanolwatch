@@ -5,7 +5,7 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 const INDIA_GEO_JSON =
   'https://raw.githubusercontent.com/geohacker/india/master/state/india_state.geojson';
 
-// State name variants don't always match common usage — normalize both
+// The topojson's state names don't always match common usage — normalize both
 // sides so "Odisha" matches "Orissa", "Delhi" matches "NCT of Delhi", etc.
 function normalize(name) {
   if (!name) return '';
