@@ -82,6 +82,9 @@ section.block{padding:60px 0;border-bottom:1px solid var(--line);}
 
 footer{padding:32px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink-faint);}
 
+.how-it-works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+@media (max-width:700px){ .how-it-works-grid{grid-template-columns:1fr;} }
+
 /* Report form */
 .form-card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:32px;max-width:640px;margin:0 auto;}
 .form-row{margin-bottom:18px;}

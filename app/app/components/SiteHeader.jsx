@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Logo from './Logo';
 
 export default function SiteHeader() {
   const [dark, setDark] = useState(false);
@@ -15,7 +16,7 @@ export default function SiteHeader() {
     <header>
       <div className="nav">
         <Link href="/" className="logo">
-          <span className="dotmark"></span>EthanolWatch
+          <Logo /> EthanolWatch
         </Link>
         <nav className="navlinks">
           <Link href="/report">Report</Link>

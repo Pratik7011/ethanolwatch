@@ -1,6 +1,7 @@
 import SiteHeader from '../components/SiteHeader';
 import IndiaMap from '../components/IndiaMap';
 import { getCategoryStats, getStateCounts, getTotalReports, getAllReports } from '../../lib/queries';
+import { SeverityBadge, ConfidenceBadge } from '../components/StatusBadges';
 
 const MIN_REPORTS_FOR_PERCENTAGES = 50;
 
@@ -106,10 +107,10 @@ export default async function DataPage() {
                 <div className="forum-title">
                   {r.vehicle_make} {r.vehicle_model} {r.vehicle_year ? `· ${r.vehicle_year}` : ''}
                 </div>
-                <div className="hint" style={{ marginTop: 4 }}>
-                  {r.city}, {r.state} · {r.severity} · {r.onset}
-                  {r.odometer_km ? ` · ${r.odometer_km.toLocaleString()} km` : ''}
-                  {r.ethanol_confidence ? ` · ${CONFIDENCE_LABELS[r.ethanol_confidence]}` : ''}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginTop: 6 }}>
+                  <span className="hint">{r.city}, {r.state}{r.odometer_km ? ` · ${r.odometer_km.toLocaleString()} km` : ''}</span>
+                  <SeverityBadge level={r.severity} />
+                  {r.ethanol_confidence && <ConfidenceBadge level={r.ethanol_confidence} />}
                 </div>
                 {r.description && (
                   <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 6, maxWidth: 500 }}>
