@@ -10,6 +10,10 @@ import {
   getRecentThreads,
 } from '../lib/queries';
 
+// Below this many total reports, we show raw counts instead of percentages —
+// percentages from a handful of reports are misleading, not just imprecise.
+const MIN_REPORTS_FOR_PERCENTAGES = 50;
+
 export const revalidate = 60; // re-fetch data at most once a minute
 
 export default async function HomePage() {
@@ -51,8 +55,15 @@ export default async function HomePage() {
           <div className="section-head">
             <div className="eyebrow"><span className="dotmark"></span>Findings to date</div>
             <h2>Issue frequency by category</h2>
-            <p>Share of submitted reports mentioning each issue type.</p>
+            <p>Owner-reported issues, by category. Not a diagnosis of cause.</p>
           </div>
+          {totalCount < MIN_REPORTS_FOR_PERCENTAGES && (
+            <div className="form-msg" style={{ background: 'var(--teal-soft)', color: 'var(--teal-deep)', marginBottom: 16 }}>
+              <strong>Early data collection phase.</strong> We're building India's independent
+              record of owner-reported E20 experiences. Findings become statistically meaningful
+              as more verified reports come in — for now we show raw counts, not percentages.
+            </div>
+          )}
           <div className="data-list">
             {categoryStats.length === 0 && (
               <div className="data-row"><p>No reports yet — be the first to submit one.</p></div>
@@ -63,10 +74,19 @@ export default async function HomePage() {
                   <h3>{cat.label}</h3>
                   <p>{cat.description}</p>
                 </div>
-                <div style={{ height: 7, background: 'var(--line)', borderRadius: 4, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: `${cat.pct}%`, background: 'var(--teal)', borderRadius: 4 }} />
-                </div>
-                <span className="pct">{cat.pct}%</span>
+                {totalCount >= MIN_REPORTS_FOR_PERCENTAGES ? (
+                  <>
+                    <div style={{ height: 7, background: 'var(--line)', borderRadius: 4, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${cat.pct}%`, background: 'var(--teal)', borderRadius: 4 }} />
+                    </div>
+                    <span className="pct">{cat.pct}%</span>
+                  </>
+                ) : (
+                  <>
+                    <div></div>
+                    <span className="pct">{cat.count} report{cat.count === 1 ? '' : 's'}</span>
+                  </>
+                )}
               </div>
             ))}
           </div>

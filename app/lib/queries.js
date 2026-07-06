@@ -63,7 +63,7 @@ export async function getStateCounts() {
 export async function getAllReports(limit = 50) {
   const { data } = await supabase
     .from('reports')
-    .select('id, vehicle_make, vehicle_model, vehicle_year, vehicle_type, city, state, issue_categories, severity, onset, odometer_km, description, created_at')
+    .select('id, vehicle_make, vehicle_model, vehicle_year, vehicle_type, city, state, issue_categories, severity, onset, odometer_km, description, ethanol_confidence, created_at')
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     .limit(limit);

@@ -25,6 +25,7 @@ export default function ReportPage() {
     vehicle_make: '', vehicle_model: '', vehicle_year: '', vehicle_type: 'car',
     fuel_type: 'petrol', city: '', state: 'Maharashtra', issue_categories: [],
     severity: 'moderate', onset: 'gradual', odometer_km: '', description: '',
+    ethanol_confidence: 'owner_suspected',
   });
   const [status, setStatus] = useState(null); // null | 'submitting' | 'success' | 'error'
   const [errorMsg, setErrorMsg] = useState('');
@@ -78,6 +79,7 @@ export default function ReportPage() {
       city: form.city,
       state: form.state,
       issue_categories: form.issue_categories,
+      ethanol_confidence: form.ethanol_confidence,
       severity: form.severity,
       onset: form.onset,
       odometer_km: form.odometer_km ? parseInt(form.odometer_km) : null,
@@ -185,6 +187,17 @@ export default function ReportPage() {
                     <option value="gradual">Gradual</option>
                   </select>
                 </div>
+              </div>
+
+              <div className="form-row">
+                <label>How certain are you this is related to ethanol-blended fuel?</label>
+                <select value={form.ethanol_confidence} onChange={(e) => update('ethanol_confidence', e.target.value)}>
+                  <option value="owner_suspected">I suspect it, but I'm not certain</option>
+                  <option value="mechanic_suggested">A mechanic suggested it</option>
+                  <option value="service_center_diagnosed">Diagnosed by an authorised service centre</option>
+                  <option value="unknown">I don't know the cause</option>
+                </select>
+                <div className="hint">This helps separate confirmed diagnoses from suspicion — both are valuable, but the difference matters.</div>
               </div>
 
               <div className="form-row">

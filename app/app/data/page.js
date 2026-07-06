@@ -2,6 +2,8 @@ import SiteHeader from '../components/SiteHeader';
 import IndiaMap from '../components/IndiaMap';
 import { getCategoryStats, getStateCounts, getTotalReports, getAllReports } from '../../lib/queries';
 
+const MIN_REPORTS_FOR_PERCENTAGES = 50;
+
 const CATEGORY_LABELS = {
   mileage_drop: 'Mileage drop',
   engine_knocking: 'Engine knocking',
@@ -11,6 +13,13 @@ const CATEGORY_LABELS = {
   corrosion: 'Corrosion',
   hard_start: 'Hard starting',
   other: 'Other',
+};
+
+const CONFIDENCE_LABELS = {
+  owner_suspected: 'Owner suspected',
+  mechanic_suggested: 'Mechanic suggested',
+  service_center_diagnosed: 'Service centre diagnosed',
+  unknown: 'Cause unknown',
 };
 
 export const revalidate = 60;
@@ -39,6 +48,13 @@ export default async function DataPage() {
         </div>
 
         <h2 style={{ fontSize: 22, marginBottom: 16 }}>Issue frequency</h2>
+        {totalCount < MIN_REPORTS_FOR_PERCENTAGES && (
+          <div className="form-msg" style={{ background: 'var(--teal-soft)', color: 'var(--teal-deep)', marginBottom: 16 }}>
+            <strong>Early data collection phase.</strong> Percentages become meaningful once we
+            have a larger sample — below {MIN_REPORTS_FOR_PERCENTAGES} total reports, we show raw
+            counts instead.
+          </div>
+        )}
         <div className="data-list" style={{ marginBottom: 40 }}>
           {categoryStats.map((cat) => (
             <div className="data-row" key={cat.id}>
@@ -46,10 +62,19 @@ export default async function DataPage() {
                 <h3>{cat.label}</h3>
                 <p>{cat.count} reports</p>
               </div>
-              <div style={{ height: 7, background: 'var(--line)', borderRadius: 4, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${cat.pct}%`, background: 'var(--teal)', borderRadius: 4 }} />
-              </div>
-              <span className="pct">{cat.pct}%</span>
+              {totalCount >= MIN_REPORTS_FOR_PERCENTAGES ? (
+                <>
+                  <div style={{ height: 7, background: 'var(--line)', borderRadius: 4, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${cat.pct}%`, background: 'var(--teal)', borderRadius: 4 }} />
+                  </div>
+                  <span className="pct">{cat.pct}%</span>
+                </>
+              ) : (
+                <>
+                  <div></div>
+                  <span className="pct">{cat.count}</span>
+                </>
+              )}
             </div>
           ))}
         </div>
@@ -84,6 +109,7 @@ export default async function DataPage() {
                 <div className="hint" style={{ marginTop: 4 }}>
                   {r.city}, {r.state} · {r.severity} · {r.onset}
                   {r.odometer_km ? ` · ${r.odometer_km.toLocaleString()} km` : ''}
+                  {r.ethanol_confidence ? ` · ${CONFIDENCE_LABELS[r.ethanol_confidence]}` : ''}
                 </div>
                 {r.description && (
                   <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 6, maxWidth: 500 }}>
