@@ -1,6 +1,6 @@
 export default function Logo({ size = 26 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" style={{ flexShrink: 0 }}>
+    <svg width={size} height={size} viewBox="0 0 64 64" style={{ flexShrink: 0, marginRight: 8 }}>
       <defs>
         <clipPath id="ew-lens">
           <circle cx="30" cy="30" r="18" />
