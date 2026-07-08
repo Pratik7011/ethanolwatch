@@ -1,5 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="30" fill="#122430"/>
-  <circle cx="32" cy="32" r="21" fill="none" stroke="#3FC4CE" stroke-width="3"/>
-  <circle cx="32" cy="14" r="5.5" fill="#0E7C86"/>
+  <defs>
+    <clipPath id="lens">
+      <circle cx="30" cy="30" r="18"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#lens)">
+    <rect x="17" y="34" width="7" height="12" fill="#57646F"/>
+    <rect x="26" y="26" width="7" height="20" fill="#0A5B62"/>
+    <rect x="35" y="18" width="7" height="28" fill="#0E7C86"/>
+  </g>
+  <circle cx="30" cy="30" r="21" fill="none" stroke="#122430" stroke-width="4"/>
+  <line x1="45" y1="45" x2="56" y2="56" stroke="#122430" stroke-width="6" stroke-linecap="round"/>
 </svg>
