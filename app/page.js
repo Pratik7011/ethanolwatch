@@ -145,7 +145,10 @@ export default async function HomePage() {
         </section>
       </main>
 
-    <footer className="wrap">
+      <footer className="wrap">
         <span>EthanolWatch — independent community record.</span>
-        <span style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: '0.05em' }}>DATA · EVIDENCE · TRANSPARENCY</span>
+        <span className="mono">DATA · EVIDENCE · TRANSPARENCY</span>
       </footer>
+    </>
+  );
+}
