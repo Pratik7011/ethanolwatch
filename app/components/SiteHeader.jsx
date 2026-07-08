@@ -16,7 +16,7 @@ export default function SiteHeader() {
     <header>
       <div className="nav">
         <Link href="/" className="logo">
-          <Logo /> EthanolWatch
+          <Logo /> Ethanol<span style={{ color: 'var(--teal)' }}>Watch</span>
         </Link>
         <nav className="navlinks">
           <Link href="/report">Report</Link>
