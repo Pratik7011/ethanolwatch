@@ -37,7 +37,7 @@ header{position:sticky;top:0;z-index:50;background:color-mix(in srgb, var(--pape
 .navcta{background:var(--navy);color:#fff;padding:10px 19px;border-radius:8px;font-size:14px;font-weight:600;}
 
 .hero{padding:56px 0 0;}
-.hero-top{display:grid;grid-template-columns:1.05fr 0.95fr;gap:44px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:50px;}
+.hero-top{display:grid;grid-template-columns:1.05fr 0.95fr;gap:44px;align-items:center;padding-bottom:50px;}
 @media (max-width:900px){ .hero-top{grid-template-columns:1fr;} }
 h1{font-size:44px;font-weight:800;line-height:1.12;letter-spacing:-0.02em;margin:16px 0 18px;}
 @media (max-width:560px){ h1{font-size:30px;} }
@@ -55,7 +55,22 @@ h1{font-size:44px;font-weight:800;line-height:1.12;letter-spacing:-0.02em;margin
 .mapcard-head .live-chip{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--live);background:var(--live-soft);padding:3px 9px;border-radius:5px;}
 .citypulse{width:6px;height:6px;border-radius:50%;background:var(--live);}
 
-section.block{padding:60px 0;border-bottom:1px solid var(--line);}
+section.block{padding:60px 0;}
+
+/* Full-width section bands — the actual fix for the "empty sides" issue.
+   Content still centers at a comfortable reading width via .wrap, but the
+   background now stretches edge-to-edge so the page doesn't look hollow
+   on wide screens. */
+.band{width:100%;}
+.band-hero{background:color-mix(in srgb, var(--navy) 5%, var(--paper));border-bottom:1px solid var(--line);}
+.band-card{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.band-paper{background:var(--paper);border-bottom:1px solid var(--line);}
+.band-navy{background:var(--navy);}
+.band-navy .eyebrow{color:#9CB3B8;}
+.band-navy .dotmark{background:var(--teal);box-shadow:0 0 0 3px rgba(63,196,206,0.25);}
+.band-navy .cta-band h2{color:#fff;}
+.band-navy .btn-line{border-color:rgba(255,255,255,0.35);color:#fff;}
+.band-navy .btn-line:hover{border-color:#fff;}
 .section-head{margin-bottom:32px;max-width:620px;}
 .section-head h2{font-size:26px;font-weight:800;letter-spacing:-0.02em;margin:10px 0 6px;}
 .section-head p{color:var(--ink-soft);font-size:14.5px;}
